@@ -1,0 +1,34 @@
+<project>
+	<property name="lib.dir" location="${basedir}/lib"/>
+	<property name="build.dir" location="${basedir}/build"/>
+	<property name="class.dir" location="${build.dir}/classes"/>
+	<property name="dist.dir" location="${build.dir}/jar"/>
+	<property name="src.dir" location="${basedir}/src"/>
+	
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
+		<pathelement path="${class.dir}"/>
+	</path>
+
+	<target name="clean">
+		<delete dir="${build.dir}"/>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${class.dir}"/>
+		<javac srcdir="${src.dir}" destdir="${class.dir}" classpathref="classpath"/>
+	</target>
+
+	<target name="jar" depends="compile">
+		<mkdir dir="${dist.dir}"/>
+		<jar destfile="${dist.dir}/jopensurf_ant.jar" basedir="${class.dir}"/>
+		<manifestclasspath property="lib.list">
+			<classpath refid="classpath"/>
+		</manifestclasspath>
+		<manifest>
+			<attribute name="Main-Class" value="com.stromberglabs.jopensurf.Surf"/>
+			<attribute name="Class-Path" value="${lib.list}"/>
+		</manifest>
+	</target>
+
+</project>
