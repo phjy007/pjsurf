@@ -1,0 +1,37 @@
+<project>
+	<property name="lib.dir" location="${basedir}/lib"/>
+	<property name="build.dir" location="${basedir}/build"/>
+	<property name="class.dir" location="${build.dir}/classes"/>
+	<property name="dist.dir" location="${build.dir}/jar"/>
+	<property name="src.dir" location="${basedir}/src"/>
+		
+	<path id="classpath">
+		<fileset dir="${lib.dir}" includes="**/*.jar"/>
+		<pathelement path="${class.dir}"/>
+	</path>
+
+	<target name="clean">
+		<delete file="${build.dir}/jar/jopensurf_pipeline_ant.jar"/>
+		<delete file="${build.dir}/build/*.class"/>
+	</target>
+
+	<target name="compile">
+		<mkdir dir="${class.dir}"/>
+		<javac srcdir="${src.dir}" destdir="${class.dir}" classpathref="classpath"/>
+	</target>
+
+	<target name="jar" depends="compile">
+		<manifestclasspath property="lib.list" jarfile="${dist.dir}/jopensurf_pipeline_ant.jar">
+			<classpath refid="classpath"/>
+		</manifestclasspath>
+		<jar jarfile="${dist.dir}/jopensurf_pipeline_ant.jar"
+			 basedir="${class.dir}" includes="com/stromberglabs/jopensurf/**">
+			<manifest>
+				<attribute name="Main-Class" value="com.stromberglabs.jopensurf.Surf"/>
+				<attribute name="Class-Path" value="${lib.list}"/>
+			</manifest>
+			<!-- <zipgroupfileset dir="${lib.dir}" includes="**/*.jar" /> -->
+		</jar>
+	</target>
+
+</project>
